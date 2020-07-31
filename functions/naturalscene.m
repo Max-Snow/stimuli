@@ -23,7 +23,7 @@ function ex = naturalscene(ex, replay)
     me = ex.params;
 
     % set the random seed
-    rs = getrng(me.seed);
+    %rs = getrng(me.seed);
 
   else
 
@@ -34,12 +34,16 @@ function ex = naturalscene(ex, replay)
     vbl = GetSecs();
 
     % initialize random seed
+    %if isfield(me, 'seed')
+    %  rs = getrng(me.seed);
+    %else
+    %  rs = getrng();
+    %end
+    %ex.stim{end}.seed = rs.Seed;
     if isfield(me, 'seed')
-      rs = getrng(me.seed);
-    else
-      rs = getrng();
+      rand('seed', me.seed);
+      randn('seed', me.seed);
     end
-    ex.stim{end}.seed = rs.Seed;
 
     % compute flip times from the desired frame rate and length
     if me.framerate > ex.disp.frate
@@ -60,7 +64,6 @@ function ex = naturalscene(ex, replay)
     % store timestamps
     ex.stim{end}.timestamps = zeros(ex.stim{end}.numframes,1);
 
-    ex = get_hidens_mask(ex);
 
   end
 
@@ -79,15 +82,15 @@ function ex = naturalscene(ex, replay)
     % pick a new image
     if mod(fi, me.jumpevery) == 1
 
-      img = rescale(images{randi(rs, numimages)});
-      xstart = randi(rs, size(img,1) - 2*me.ndims(1)) + me.ndims(1);
-      ystart = randi(rs, size(img,2) - 2*me.ndims(2)) + me.ndims(2);
+      img = rescale(images{randi(numimages)});
+      xstart = randi(size(img,1) - 2*me.ndims(1)) + me.ndims(1);
+      ystart = randi(size(img,2) - 2*me.ndims(2)) + me.ndims(2);
 
     % jitter
     else
 
-      xstart = max(min(size(img,1) - me.ndims(1), xstart + round(me.jitter * randn(rs, 1))), 1);
-      ystart = max(min(size(img,2) - me.ndims(2), ystart + round(me.jitter * randn(rs, 1))), 1);
+      xstart = max(min(size(img,1) - me.ndims(1), xstart + round(me.jitter * randn(1))), 1);
+      ystart = max(min(size(img,2) - me.ndims(2), ystart + round(me.jitter * randn(1))), 1);
 
     end
 
@@ -107,8 +110,6 @@ function ex = naturalscene(ex, replay)
       % draw the texture, then kill it
       Screen('DrawTexture', ex.disp.winptr, texid, [], ex.disp.dstrect, 0, 0);
       Screen('Close', texid);
-
-      Screen('DrawTexture', ex.disp.winptr, ex.disp.hidens_mask, [], [], 90);
 
       % update the photodiode with the top left pixel on the first frame
       if fi == 1
@@ -136,6 +137,10 @@ function ex = naturalscene(ex, replay)
 
     end
 
+  end
+  if isfield(me, 'seed')
+    rand('seed', 'reset');
+    randn('seed', 'reset');
   end
 
 end
