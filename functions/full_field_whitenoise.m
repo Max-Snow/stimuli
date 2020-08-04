@@ -64,8 +64,9 @@ function ex = whitenoise(ex, replay)
   colors = randn(numframes, 1);
   quotient = idivide(numframes, num_contrast_frames);
   remainer = rem(numframes, num_contrast_frames);
-  contrasts = repelem(rand(quotient, 1), num_contrast_frames);
-  contrasts = cat(1, contrasts, ones(remainer, 1) * rand);
+  contrasts = rand(quotient, 1) * (me.contrast_h - me.contrast_l) + me.contrast_l;
+  contrasts = repelem(contrasts, num_contrast_frames);
+  contrasts = cat(1, contrasts, ones(remainer, 1) * rand * (me.contrast_h - me.contrast_l) + me.contrast_l);
   colors = colors .* contrasts * ex.disp.gray + ex.disp.gray;
   colors = max(colors, ex.disp.black);
   colors = min(colors, ex.disp.white);
@@ -100,7 +101,7 @@ function ex = whitenoise(ex, replay)
       ex = checkkb(ex);
       if ex.key.keycode(ex.key.esc)
         fprintf('ESC pressed. Quitting.')
-        break;
+        exit;
       end
 
     end

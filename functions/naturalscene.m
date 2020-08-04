@@ -132,7 +132,7 @@ function ex = naturalscene(ex, replay)
       ex = checkkb(ex);
       if ex.key.keycode(ex.key.esc)
         fprintf('ESC pressed. Quitting.')
-        break;
+        exit;
       end
 
     end
