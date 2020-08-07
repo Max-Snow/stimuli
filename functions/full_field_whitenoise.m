@@ -1,4 +1,4 @@
-function ex = whitenoise(ex, replay)
+function ex = full_field_whitenoise(ex, replay)
 %
 % ex = whitenoise(ex, replay)
 %

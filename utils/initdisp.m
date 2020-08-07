@@ -3,16 +3,10 @@ function ex = initdisp(ex)
 % FUNCTION ex = initdisp(ex)
 %
 % Initialize the display. 
-%
-% (c) bnaecker@stanford.edu 2014 
-%     modified by nirum@stanford.edu 2015
-%
-% 27 Feb 2015 - added check for background color in 'ex' struct
-% 28 Apr 2015 - removed check for alternate display
 
 % Make sure PTB is working, hide the on screen cursor
 AssertOpenGL;
-HideCursor;
+HideCursor();
 
 % Check 'ex' struct for background color
 if ~isfield(ex.disp, 'bgcol')

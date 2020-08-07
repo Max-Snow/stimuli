@@ -29,4 +29,4 @@ function send(msgTitle, msgText)
 
     url = 'https://api.pushover.net/1/messages.json';
 
-    s = urlread(url,'POST',params);
+    s = urlread(url,'post',params);

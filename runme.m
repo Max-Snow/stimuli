@@ -13,7 +13,7 @@ addpath('utils/')
 addpath('functions/')
 
 % turn the `debug` flag on when testing
-debug = true;
+debug = false;
 
 try
 
