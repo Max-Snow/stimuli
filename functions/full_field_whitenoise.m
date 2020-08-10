@@ -27,9 +27,6 @@ function ex = full_field_whitenoise(ex, replay)
     % shortcut for parameters
     me = ex.stim{end}.params;
 
-    % initialize the VBL timestamp
-    vbl = GetSecs();
-
     % initialize random seed
     %if isfield(me, 'seed')
     %  rs = getrng(me.seed);
@@ -48,7 +45,7 @@ function ex = full_field_whitenoise(ex, replay)
     end
     flipsPerFrame = round(ex.disp.frate / me.framerate);
     ex.stim{end}.framerate = 1 / (flipsPerFrame * ex.disp.ifi);
-    flipint = ex.disp.ifi * (flipsPerFrame - 0.25);
+    flipint = ex.disp.ifi * (flipsPerFrame - 0.5);
 
     % store the number of frames
     numframes = ceil(me.length * ex.stim{end}.framerate);
@@ -83,7 +80,7 @@ function ex = full_field_whitenoise(ex, replay)
       if fi == 1
         Screen('FillRect', ex.disp.winptr, colors(fi, 1), ex.disp.dstrect);
         Screen('FillOval', ex.disp.winptr, ex.disp.white, ex.disp.pdrect);
-        vbl = Screen('Flip', ex.disp.winptr, vbl + flipint);
+        vbl = Screen('Flip', ex.disp.winptr);
       elseif fi == numframes + 1
         Screen('FillRect', ex.disp.winptr, colors(fi - 1, 1), ex.disp.dstrect);
         Screen('FillOval', ex.disp.winptr, ex.disp.white, ex.disp.pdrect);

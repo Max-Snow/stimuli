@@ -4,9 +4,8 @@ function ex = initdisp(ex)
 %
 % Initialize the display. 
 
-% Make sure PTB is working, hide the on screen cursor
+% Make sure PTB is working
 AssertOpenGL;
-HideCursor();
 
 % Check 'ex' struct for background color
 if ~isfield(ex.disp, 'bgcol')
@@ -31,6 +30,9 @@ PsychImaging('AddTask', 'General', 'FloatingPoint32BitIfPossible');
 
 % Setup alpha-blending
 Screen('BlendFunction', ex.disp.winptr, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+% Hide the on screen cursor
+HideCursor();
 
 % Screen info
 ex.disp.ifi    		= Screen('GetFlipInterval', ex.disp.winptr);

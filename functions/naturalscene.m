@@ -30,9 +30,6 @@ function ex = naturalscene(ex, replay)
     % shorthand for parameters
     me = ex.stim{end}.params;
 
-    % initialize the VBL timestamp
-    vbl = GetSecs();
-
     % initialize random seed
     %if isfield(me, 'seed')
     %  rs = getrng(me.seed);
@@ -51,11 +48,7 @@ function ex = naturalscene(ex, replay)
     end
     flipsPerFrame = round(ex.disp.frate / me.framerate);
     ex.stim{end}.framerate = 1 / (flipsPerFrame * ex.disp.ifi);
-    flipint = ex.disp.ifi * (flipsPerFrame - 0.25);
-
-    % darken the photodiode
-    Screen('FillOval', ex.disp.winptr, 0, ex.disp.pdrect);
-    vbl = Screen('Flip', ex.disp.winptr, vbl + flipint);
+    flipint = ex.disp.ifi * (flipsPerFrame - 0.5);
 
     % store the number of frames
     numframes = ceil((me.length * 60) * ex.stim{end}.framerate);
@@ -67,7 +60,6 @@ function ex = naturalscene(ex, replay)
 
   end
 
-
   % load natural images
   files = dir(fullfile(me.imgdir, me.imgext));
   numimages = length(files);
@@ -76,6 +68,13 @@ function ex = naturalscene(ex, replay)
     images(fileidx) = struct2cell(load(fullfile(me.imgdir, files(fileidx).name)));
   end
 
+  if ~replay
+  
+    Screen('FillOval', ex.disp.winptr, 0, ex.disp.pdrect);
+    vbl = Screen('Flip', ex.disp.winptr);
+  
+  end
+  
   % loop over frames
   for fi = 1:numframes
 
