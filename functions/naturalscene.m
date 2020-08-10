@@ -67,16 +67,9 @@ function ex = naturalscene(ex, replay)
   for fileidx = 1:numimages
     images(fileidx) = struct2cell(load(fullfile(me.imgdir, files(fileidx).name)));
   end
-
-  if ~replay
-  
-    Screen('FillOval', ex.disp.winptr, 0, ex.disp.pdrect);
-    vbl = Screen('Flip', ex.disp.winptr);
-  
-  end
   
   % loop over frames
-  for fi = 1:numframes
+  for fi = 1:numframes + 1
 
     % pick a new image
     if mod(fi, me.jumpevery) == 1
@@ -113,8 +106,9 @@ function ex = naturalscene(ex, replay)
       % update the photodiode with the top left pixel on the first frame
       if fi == 1
         pd = ex.disp.white;
-      %elseif mod(fi, me.jumpevery) == 1
-      %  pd = 0.8 * ex.disp.white;
+        vbl = GetSecs();
+      elseif fi == numframes + 1
+        pd = ex.disp.white;
       else
         pd = 0;
       end
@@ -137,6 +131,14 @@ function ex = naturalscene(ex, replay)
     end
 
   end
+  if ~replay
+    
+    Screen('FillRect', ex.disp.winptr, 0, ex.disp.dstrect);
+    Screen('FillOval', ex.disp.winptr, 0, ex.disp.pdrect);
+    vbl = Screen('Flip', ex.disp.winptr, vbl + flipint);
+    pause(1);
+  end
+  
   if isfield(me, 'seed')
     rand('seed', 'reset');
     randn('seed', 'reset');

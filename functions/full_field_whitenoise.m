@@ -87,7 +87,7 @@ function ex = full_field_whitenoise(ex, replay)
         vbl = Screen('Flip', ex.disp.winptr, vbl + flipint);
       else
         Screen('FillRect', ex.disp.winptr, colors(fi, 1), ex.disp.dstrect);
-        Screen('FillOval', ex.disp.winptr, 0.5 * colors(fi, 1), ex.disp.pdrect);
+        Screen('FillOval', ex.disp.winptr, 0, ex.disp.pdrect);
         vbl = Screen('Flip', ex.disp.winptr, vbl + flipint);
       end
       
@@ -104,6 +104,14 @@ function ex = full_field_whitenoise(ex, replay)
     end
 
   end
+  if ~replay
+    
+    Screen('FillRect', ex.disp.winptr, 0, ex.disp.dstrect);
+    Screen('FillOval', ex.disp.winptr, 0, ex.disp.pdrect);
+    vbl = Screen('Flip', ex.disp.winptr, vbl + flipint);
+    pause(1);
+  end
+  
   if isfield(me, 'seed')
     rand('seed', 'reset');
     randn('seed', 'reset');
