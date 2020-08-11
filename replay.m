@@ -34,7 +34,7 @@ for stimidx = 1:length(expt.stim)
   end
   
   % store the stimulus pixel values
-  h5create(fname, [group '/stim'], [me.ndims, stim.numframes], 'Datatype', 'uint8');
+  h5create(fname, [group '/stim'], [me.ndims, stim.numframes+1], 'Datatype', 'uint8');
   stim.filename = fullfile('stimulus.h5'); %fname;
   stim.group = group;
   stim.disp = expt.disp;
