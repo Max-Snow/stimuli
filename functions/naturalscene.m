@@ -31,16 +31,16 @@ function ex = naturalscene(ex, replay)
     me = ex.stim{end}.params;
 
     % initialize random seed
-    %if isfield(me, 'seed')
-    %  rs = getrng(me.seed);
-    %else
-    %  rs = getrng();
-    %end
-    %ex.stim{end}.seed = rs.Seed;
     if isfield(me, 'seed')
-      rand('seed', me.seed);
-      randn('seed', me.seed);
+      rs = getrng(me.seed);
+    else
+      rs = getrng();
     end
+    ex.stim{end}.seed = rs.Seed;
+    %if isfield(me, 'seed')
+    %  rand('seed', me.seed);
+    %  randn('seed', me.seed);
+    %end
 
     % compute flip times from the desired frame rate and length
     if me.framerate > ex.disp.frate
@@ -73,16 +73,15 @@ function ex = naturalscene(ex, replay)
 
     % pick a new image
     if mod(fi, me.jumpevery) == 1
-
-      img = rescale(images{randi(numimages)});
-      xstart = randi(size(img,1) - 2*me.ndims(1)) + me.ndims(1);
-      ystart = randi(size(img,2) - 2*me.ndims(2)) + me.ndims(2);
+      img = rescale(images{randi(rs, numimages)});
+      xstart = randi(rs, size(img,1) - 2*me.ndims(1)) + me.ndims(1);
+      ystart = randi(rs, size(img,2) - 2*me.ndims(2)) + me.ndims(2);
 
     % jitter
     else
 
-      xstart = max(min(size(img,1) - me.ndims(1), xstart + round(me.jitter * randn(1))), 1);
-      ystart = max(min(size(img,2) - me.ndims(2), ystart + round(me.jitter * randn(1))), 1);
+      xstart = max(min(size(img,1) - me.ndims(1), xstart + round(me.jitter * randn(rs, 1))), 1);
+      ystart = max(min(size(img,2) - me.ndims(2), ystart + round(me.jitter * randn(rs, 1))), 1);
 
     end
 
@@ -137,11 +136,6 @@ function ex = naturalscene(ex, replay)
     Screen('FillOval', ex.disp.winptr, 0, ex.disp.pdrect);
     vbl = Screen('Flip', ex.disp.winptr, vbl + flipint);
     pause(1);
-  end
-  
-  if isfield(me, 'seed')
-    rand('seed', 'reset');
-    randn('seed', 'reset');
   end
 
 end

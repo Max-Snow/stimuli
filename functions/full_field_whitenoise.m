@@ -28,16 +28,16 @@ function ex = full_field_whitenoise(ex, replay)
     me = ex.stim{end}.params;
 
     % initialize random seed
-    %if isfield(me, 'seed')
-    %  rs = getrng(me.seed);
-    %else
-    %  rs = getrng();
-    %end
-    %ex.stim{end}.seed = rs.Seed;
     if isfield(me, 'seed')
-      rand('seed', me.seed);
-      randn('seed', me.seed);
-    end    
+      rs = getrng(me.seed);
+    else
+      rs = getrng();
+    end
+    ex.stim{end}.seed = rs.Seed;
+    %if isfield(me, 'seed')
+    %  rand('seed', me.seed);
+    %  randn('seed', me.seed);
+    %end    
 
     % compute flip times from the desired frame rate and length
     if me.framerate > ex.disp.frate
@@ -48,7 +48,7 @@ function ex = full_field_whitenoise(ex, replay)
     flipint = ex.disp.ifi * (flipsPerFrame - 0.5);
 
     % store the number of frames
-    numframes = ceil(me.length * ex.stim{end}.framerate);
+    numframes = uint32(ceil(me.length * ex.stim{end}.framerate));
     num_contrast_frames = ceil(me.contrast_length * ex.stim{end}.framerate);
     ex.stim{end}.numframes = numframes;
     ex.stim{end}.num_contrast_frames = num_contrast_frames;
@@ -58,12 +58,12 @@ function ex = full_field_whitenoise(ex, replay)
 
   end
   
-  colors = randn(numframes, 1);
+  colors = randn(rs, numframes, 1);
   quotient = idivide(numframes, num_contrast_frames);
   remainer = rem(numframes, num_contrast_frames);
-  contrasts = rand(quotient, 1) * (me.contrast_h - me.contrast_l) + me.contrast_l;
-  contrasts = repelem(contrasts, num_contrast_frames);
-  contrasts = cat(1, contrasts, ones(remainer, 1) * rand * (me.contrast_h - me.contrast_l) + me.contrast_l);
+  contrasts = rand(rs, quotient, 1) * (me.contrast_h - me.contrast_l) + me.contrast_l;
+  contrasts = upsample_s(contrasts, num_contrast_frames, 1);
+  contrasts = cat(1, contrasts, ones(remainer, 1) * rand(rs) * (me.contrast_h - me.contrast_l) + me.contrast_l);
   colors = colors .* contrasts * ex.disp.gray + ex.disp.gray;
   colors = max(colors, ex.disp.black);
   colors = min(colors, ex.disp.white);
@@ -112,8 +112,4 @@ function ex = full_field_whitenoise(ex, replay)
     pause(1);
   end
   
-  if isfield(me, 'seed')
-    rand('seed', 'reset');
-    randn('seed', 'reset');
-  end
 end
