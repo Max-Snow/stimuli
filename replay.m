@@ -41,7 +41,7 @@ for stimidx = 1:length(expt.stim)
   eval(['ex = ' stim.function '(stim, true);']);
   
   % store the timestamps
-  h5create(fname, [group '/timestamps'], stim.numframes);
+  h5create(fname, [group '/timestamps'], stim.numframes+1);
   h5write(fname, [group '/timestamps'], stim.timestamps - stim.timestamps(1));
 
   % store metadata

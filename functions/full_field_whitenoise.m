@@ -17,10 +17,11 @@ function ex = full_field_whitenoise(ex, replay)
 
     % load experiment properties
     numframes = ex.numframes;
+    num_contrast_frames = ex.num_contrast_frames;
     me = ex.params;
 
     % set the random seed
-    %rs = getrng(me.seed);
+    rs = getrng(me.seed);
 
   else
 
@@ -54,12 +55,12 @@ function ex = full_field_whitenoise(ex, replay)
     ex.stim{end}.num_contrast_frames = num_contrast_frames;
     
     % store timestamps
-    ex.stim{end}.timestamps = zeros(ex.stim{end}.numframes,1);
+    ex.stim{end}.timestamps = zeros(ex.stim{end}.numframes+1,1);
 
   end
   
   colors = randn(rs, numframes, 1);
-  quotient = idivide(numframes, num_contrast_frames);
+  quotient = idivide(uint32(numframes), uint32(num_contrast_frames));
   remainer = rem(numframes, num_contrast_frames);
   contrasts = rand(rs, quotient, 1) * (me.contrast_h - me.contrast_l) + me.contrast_l;
   contrasts = upsample_s(contrasts, num_contrast_frames, 1);
@@ -71,11 +72,13 @@ function ex = full_field_whitenoise(ex, replay)
   % loop over frames
   for fi = 1:numframes + 1    
 
-    if replay && fi < numframes + 1
-
+    if replay
+        
+      if fi == numframes + 1
+          continue
+      end
       % write the frame to the hdf5 file
       h5write(ex.filename, [ex.group '/stim'], uint8(ones(me.ndims) * colors(fi, 1)), [1, 1, fi], [me.ndims, 1]);
-
     else
       if fi == 1
         Screen('FillRect', ex.disp.winptr, colors(fi, 1), ex.disp.dstrect);

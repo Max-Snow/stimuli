@@ -23,7 +23,7 @@ function ex = naturalscene(ex, replay)
     me = ex.params;
 
     % set the random seed
-    %rs = getrng(me.seed);
+    rs = getrng(me.seed);
 
   else
 
@@ -55,7 +55,7 @@ function ex = naturalscene(ex, replay)
     ex.stim{end}.numframes = numframes;
     
     % store timestamps
-    ex.stim{end}.timestamps = zeros(ex.stim{end}.numframes,1);
+    ex.stim{end}.timestamps = zeros(ex.stim{end}.numframes+1,1);
 
 
   end
@@ -89,6 +89,10 @@ function ex = naturalscene(ex, replay)
     frame = 2 * img(xstart:(xstart + me.ndims(1) - 1), ystart:(ystart + me.ndims(2) - 1)) * me.contrast + (1 - me.contrast);
 
     if replay
+      
+      if fi == numframes + 1
+          continue
+      end
 
       % write the frame to the hdf5 file
       h5write(ex.filename, [ex.group '/stim'], uint8(me.gray * frame), [1, 1, fi], [me.ndims, 1]);
