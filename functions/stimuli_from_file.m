@@ -22,7 +22,7 @@ function ex = stimuli_from_file(ex, replay)
     % load experiment properties
     numframes = ex.numframes;
     me = ex.params;
-    stimulus = load(fullfile(me.stim_dir, me.stim_name));
+    stimulus = load(fullfile(me.stim_dir, me.stim_name)).stim;
 
   else
 
