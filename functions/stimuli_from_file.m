@@ -112,11 +112,6 @@ function ex = stimuli_from_file(ex, replay)
     vbl = Screen('Flip', ex.disp.winptr, vbl + flipint);
     pause(1);
   end
-  
-  if isfield(me, 'seed')
-    rand('seed', 'reset');
-    randn('seed', 'reset');
-  end
 
 end
 
