@@ -88,6 +88,7 @@ function ex = full_field_whitenoise(ex, replay)
         Screen('FillRect', ex.disp.winptr, colors(fi, 1), ex.disp.dstrect);
         Screen('FillOval', ex.disp.winptr, ex.disp.white, ex.disp.pdrect);
         vbl = Screen('Flip', ex.disp.winptr);
+        init_vbl = vbl;
       elseif fi == numframes + 1
         Screen('FillRect', ex.disp.winptr, colors(fi - 1, 1), ex.disp.dstrect);
         Screen('FillOval', ex.disp.winptr, ex.disp.white, ex.disp.pdrect);
@@ -99,7 +100,7 @@ function ex = full_field_whitenoise(ex, replay)
       end
       
       % save the timestamp
-      ex.stim{end}.timestamps(fi) = vbl;
+      ex.stim{end}.timestamps(fi) = vbl - init_vbl;
 
       % check for ESC
       ex = checkkb(ex);
