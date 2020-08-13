@@ -110,6 +110,7 @@ function ex = naturalscene(ex, replay)
       if fi == 1
         pd = ex.disp.white;
         vbl = GetSecs();
+        init_vbl = vbl;
       elseif fi == numframes + 1
         pd = ex.disp.white;
       else
@@ -122,7 +123,7 @@ function ex = naturalscene(ex, replay)
       vbl = Screen('Flip', ex.disp.winptr, vbl + flipint);
 
       % save the timestamp
-      ex.stim{end}.timestamps(fi) = vbl;
+      ex.stim{end}.timestamps(fi) = vbl - init_vbl;
 
       % check for ESC
       ex = checkkb(ex);
