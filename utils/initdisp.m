@@ -28,6 +28,10 @@ PsychImaging('AddTask', 'General', 'FloatingPoint32BitIfPossible');
 [ex.disp.winptr, ex.disp.winrect] = PsychImaging('OpenWindow', ...
   ex.disp.screen, ex.disp.bgcol);
 
+% Gamma correction 08/24/2020
+load /home/dlee/Documents/MATLAB/visual-stimuli/d239/calibration/20-08-18_gamma_DL.mat
+[oldTable, sc] = Screen('LoadNormalizedGammaTable', ex.disp.winptr, g1 * [1 1 1]);
+
 % Setup alpha-blending
 Screen('BlendFunction', ex.disp.winptr, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -38,7 +42,7 @@ HideCursor();
 ex.disp.ifi    		= Screen('GetFlipInterval', ex.disp.winptr);
 ex.disp.frate  		= round(1 / ex.disp.ifi);
 ex.disp.nominalifi	= 1 / ex.disp.frate;
-ex.disp.winctr 		= ex.disp.winrect(3:4) ./ 2;
+ex.disp.winctr 		= ex.disp.winrect(3:4) ./ 2 + [0, 50];
 ex.disp.info   		= Screen('GetWindowInfo', ex.disp.winptr);
 
 % Colors
@@ -52,8 +56,8 @@ Screen('TextSize', ex.disp.winptr, 24);
 
 % Describe photodiode
 ex.disp.pdscale = 0.6;					% Scale factor for the photodiode signal
-ex.disp.pdctr   = [0.93 0.15];
-ex.disp.pdsize  = SetRect(0, 0, 100, 100);
+ex.disp.pdctr   = [0.90 0.15];
+ex.disp.pdsize  = SetRect(0, 0, 150, 150);
 ex.disp.pdrect  = CenterRectOnPoint(ex.disp.pdsize, ...
   ex.disp.winrect(3) * ex.disp.pdctr(1), ...
   ex.disp.winrect(4) * ex.disp.pdctr(2));
