@@ -109,7 +109,7 @@ function ex = stimuli_from_file(ex, replay)
   end
   if ~replay
 
-    Screen('FillRect', ex.disp.winptr, 0, ex.disp.dstrect);
+    Screen('FillRect', ex.disp.winptr, ex.disp.gray, ex.disp.dstrect);
     Screen('FillOval', ex.disp.winptr, 0, ex.disp.pdrect);
     vbl = Screen('Flip', ex.disp.winptr, vbl + flipint);
     pause(1);
