@@ -1,0 +1,10 @@
+[{
+  "function": "full_field_whitenoise",
+  "length": 540,
+  "contrast_length": 20,
+  "contrast_l": 0.05,
+  "contrast_h": 0.35,
+  "seed": 30,
+  "framerate": 30,
+  "ndims": [50,50]
+}]

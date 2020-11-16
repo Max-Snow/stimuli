@@ -1,0 +1,2 @@
+flash-full: DL_stepflash(22, 0.5, 10, 500)
+flash-half: DL_stepflash(22, 0.5, 10, 250)

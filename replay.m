@@ -20,7 +20,11 @@ fname = 'stimulus.h5'; %fullfile(expanduser('~/Desktop/'), datestr(now, 'mmddyy'
 for stimidx = 1:length(expt.stim)
 
   % pull out the function and parameters
-  stim = expt.stim{stimidx};
+  if length(expt.stim) == 1
+    stim = expt.stim(stimidx);
+  else
+    stim = expt.stim{stimidx};
+  end
   me = stim.params;
   stim.params.gray = expt.disp.gray;
   fields = fieldnames(me);
