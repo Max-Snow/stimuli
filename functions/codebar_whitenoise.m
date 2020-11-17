@@ -1,4 +1,4 @@
-function ex = whitenoise(ex, replay)
+function ex = codebar_whitenoise(ex, replay)
 %
 % ex = whitenoise(ex, replay)
 %
@@ -18,6 +18,7 @@ function ex = whitenoise(ex, replay)
     % load experiment properties
     numframes = ex.numframes;
     me = ex.params;
+    
 
     % set the random seed
     rs = getrng(me.seed);
@@ -47,34 +48,50 @@ function ex = whitenoise(ex, replay)
     flipint = ex.disp.ifi * (flipsPerFrame - 0.25);
 
     % store the number of frames
-    numframes = ceil((me.length * 60) * ex.stim{end}.framerate);
+    numframes = ceil(me.length * ex.stim{end}.framerate);
+    num_contrast_frames = ceil(me.contrast_length * ex.stim{end}.framerate);
     ex.stim{end}.numframes = numframes;
     
     % store timestamps
     ex.stim{end}.timestamps = zeros(ex.stim{end}.numframes,1);
 
   end
+  
+  quotient = idivide(uint32(numframes), uint32(num_contrast_frames));
+  remainer = rem(numframes, num_contrast_frames);
+  contrasts = rand(rs, quotient, 1) * (me.contrast_h - me.contrast_l) + me.contrast_l;
+  contrasts = upsample_s(contrasts, num_contrast_frames, 1);
+  contrasts = cat(1, contrasts, ones(remainer, 1) * rand(rs) * (me.contrast_h - me.contrast_l) + me.contrast_l);
 
   % loop over frames
   for fi = 1:numframes + 1
-
+  
     % generate stimulus pixels
+    if fi == numframes + 1
+      contrast_now = contrasts(fi-1, 1);
+    else
+      contrast_now = contrasts(fi, 1);
+    end  
+    
     if strcmp(me.dist, 'gaussian')
-      frame = 1 + me.contrast * randn(rs, me.ndims);
+      frame = 1 + contrast_now * randn(rs, me.ndims(1), 1);
     elseif strcmp(me.dist, 'uniform')
       % this is actually uniformly distributed
-      frame = 2 * rand(rs, me.ndims) * me.contrast + (1 - me.contrast);
+      frame = 2 * rand(rs, me.ndims(1), 1) * contrast_now + (1 - contrast_now);
     elseif strcmp(me.dist, 'binary')
       % true binary would be
-      frame = floor(2 * rand(rs, me.ndims)) * me.contrast + (1 - me.contrast);
+      frame = floor(2 * rand(rs, me.ndims(1), 1)) * contrast_now + (1 - contrast_now);
     else
       error(['Distribution ' me.dist ' not recognized! Must be gaussian or binary.']);
     end
+    
+    frame = repmat(frame, 1, me.ndims(2));
 
     if replay
       if fi == numframes + 1
 	  continue
       end
+
       % write the frame to the hdf5 file
       h5write(ex.filename, [ex.group '/stim'], uint8(me.gray * frame), [1, 1, fi], [me.ndims, 1]);
 
@@ -116,6 +133,7 @@ function ex = whitenoise(ex, replay)
     end
 
   end
+  
   if ~replay
     
     Screen('FillRect', ex.disp.winptr, ex.disp.gray, ex.disp.dstrect);
