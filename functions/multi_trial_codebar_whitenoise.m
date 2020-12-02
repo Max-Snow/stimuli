@@ -1,4 +1,4 @@
-function ex = codebar_whitenoise(ex, replay)
+function ex = multi_trial_codebar_whitenoise(ex, replay)
 %
 % ex = whitenoise(ex, replay)
 %
@@ -46,8 +46,8 @@ function ex = codebar_whitenoise(ex, replay)
     flipint = ex.disp.ifi * (flipsPerFrame - 0.5);
 
     % store the number of frames
-    numframes = ceil(me.length * ex.stim{end}.framerate);
     num_contrast_frames = ceil(me.contrast_length * ex.stim{end}.framerate);
+    numframes = me.num_trials * num_contrast_frames * 2;
     ex.stim{end}.numframes = numframes;
     ex.stim{end}.num_contrast_frames = num_contrast_frames;
     
@@ -56,11 +56,10 @@ function ex = codebar_whitenoise(ex, replay)
 
   end
   
-  quotient = idivide(uint32(numframes), uint32(num_contrast_frames));
-  remainer = rem(numframes, num_contrast_frames);
-  contrasts = rand(rs, quotient, 1) * (me.contrast_h - me.contrast_l) + me.contrast_l;
+  contrasts = zeros(me.num_trials * 2, 1);
+  contrasts(1:2:end) = 1;
+  contrasts = contrasts * (me.contrast_h - me.contrast_l) + me.contrast_l;
   contrasts = upsample_s(contrasts, num_contrast_frames, 1);
-  contrasts = cat(1, contrasts, ones(remainer, 1) * rand(rs) * (me.contrast_h - me.contrast_l) + me.contrast_l);
 
   % loop over frames
   for fi = 1:numframes + 1

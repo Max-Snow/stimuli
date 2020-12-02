@@ -1,0 +1,20 @@
+[{
+  "function": "multi_trial_codebar_whitenoise",
+  "num_trials": 90,
+  "contrast_length": 20,
+  "contrast_l": 0.05,
+  "contrast_h": 0.35,
+  "seed": 30,
+  "framerate": 30,
+  "ndims": [15,15],
+  "dist": "gaussian"
+},{
+  "function": "multi_trial_full_whitenoise",
+  "num_trials": 90,
+  "contrast_length": 20,
+  "contrast_l": 0.05,
+  "contrast_h": 0.35,
+  "seed": 30,
+  "framerate": 30,
+  "ndims": [50,50]
+}]
